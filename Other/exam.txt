@@ -1,0 +1,48 @@
+module Natnums: SEQUENCE with type t = int =
+  struct
+   type t = int
+   let rec sequence_from from length =
+     if length = 0 then []
+	 else from :: sequence_from (succ from) (length - 1)
+   let sequence length = sequence_from 0 length
+  end ;; 
+  
+module Diminishing: SEQUENCE with type t = float =
+  struct
+   type t = float 
+   let rec sequence_from from length =
+     if length = 0 then []
+	 else from :: sequence_from (from /. 2.) (length - 1)
+   let sequence length = sequence_from 1. length
+  end ;;
+  
+module type ELEMENT =
+  sig
+   type t
+   val initial : t
+   val next : t -> t
+  end ;;
+  
+module Sequence (Element : ELEMENT) : SEQUENCE with type t = Element.t =
+  struct
+    type t = Element.t
+	let rec sequence_from from length =
+	  if length = 0 then []
+	  else from :: sequence_from (Element.next from) (length - 1)
+	let sequence length = sequence_from Element.initial length
+  end ;;
+  
+module Natnums =
+  Sequence(struct
+           type t = int
+		   let initial = 0
+		   let next x = succ x
+		   end) ;;
+module Diminishing =
+  Sequence(struct
+           type t = float
+		   let initial = 1.
+		   let next x = x /. 2.
+		   end) ;;
+  
+   

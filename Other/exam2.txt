@@ -1,0 +1,35 @@
+type 'a combine =
+  | Combine of ('a -> 'a) * ('a combine)
+  | Base of ('a -> 'a) * ('a option) ;;
+  
+let rec f x a =
+  match x with
+  | Base (f, None) -> f a 
+  | Base (f, Some x) -> f x
+  | Combine (g, r) -> f r (g a) ;;
+  
+ val f : 'a combine -> 'a -> 'a 
+ 
+let setup pair = -1 in
+  let (x, y) = setup (14, 42) in
+  x + y + setup (14, 0) ;;
+  
+let setup = 
+ fun x ->
+	fun y -> x + 21   in
+ setup (setup 21);;
+ 
+let tower (lst : int list) : int  = List.fold_left (fun x y -> power y x) (List.hd lst) (List.tl lst);;
+  
+  
+let find (f : 'a -> bool) (lst : 'a list) : 'a =
+  let filtered = List.filter (fun x -> f x) lst in
+  if List.length filtered = 0 then raise (Not_found)
+  else List.hd filtered;;
+  
+  
+let rec resistance (circ : circuit) : float =
+  match circ with
+  | Single x -> x
+  | Series (c1, c2) -> resistance c1 +. resistance c2
+  | Parallel (c1, c2) -> 1. /. ((1. /. resistance c1) +. (1. /. resistance c2)) ;;

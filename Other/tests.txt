@@ -1,0 +1,42 @@
+let rec tr = lazy (Node (1, [lazy (Node (2, [lazy (Node (3, [tr]))]))]));;
+let rec tr = lazy (Node (1, [lazy (Node (2, [tr]))]));;
+
+  lazy (Node (n, lazy (Node (n + 1, [levels (n + 1)])))) ;;
+  
+lazy (Node (n, [lazy (Node ((n + 1), [levels]))]));;
+
+let rec levels (n : int) : int tree =
+  lazy (Node (n, [lazy (Node ((n + 1), [lazy (Node ((n + 1), [levels (n + 2)]))]))])) ;;
+  
+let rec levels (n : int) : int tree =
+  lazy (Node (n, [lazy (Node ((n + 1), [lazy (Node ((n + 1), [levels (n + 2)]))]))])) ;;
+  
+  
+let rec tr = lazy (Node (1, [lazy (Node (2, [lazy (Node (2, [lazy (Node (3, [lazy (Node (3, [tr]))]))]))]))]));;
+
+
+let mlength (lst : 'a mlist) : int =
+  let rec mlength_helper (lst' : 'a mlist)
+                         (mlist' : 'a mlist list)
+                         (count : int): int =
+    match lst' with 
+    | Nil -> count
+    | Cons (_, tl) ->
+	    if List.length mlist' >= count then count
+        else if mlist_helper (lst' :: mlist') tl then
+		  mlength_helper !tl (lst' :: mlist') count
+        else mlength_helper !tl (lst' :: mlist') (count + 1) in
+  mlength_helper lst [] 0 ;;
+  
+let mlength (lst : 'a mlist) : int =
+  let rec mlength_helper (lst' : 'a mlist)
+                         (mlist' : 'a mlist list)
+                         (count : int): int =
+    match lst' with
+    | Nil -> count
+    | Cons (_, tl) ->
+	    if mlist_helper (lst' :: mlist') tl then
+		  mlength_helper !tl mlist' count
+        else mlength_helper !tl (lst' :: mlist') (count + 1) in
+  mlength_helper lst [] 0 ;;
+
